@@ -133,6 +133,7 @@ final alcoholStep = RPQuestionStep(
   title: 'When did you last drink alcohol?',
   answerFormat: dateAnswerFormat,
   autoSkip: true,
+  // TODO - something is wrong - this step time out after 1-2 secs
   timeout: Duration(seconds: 6),
 );
 
@@ -221,7 +222,16 @@ final instructionStep = RPInstructionStep(
     text:
         "Please fill out this questionnaire!\n\nIn this questionnaire the questions will come after each other in a given order. You still have the chance to skip a some of them though.");
 
-final timerStep = RPTimerStep(
+final timerStep1 = RPTimerStep(
+  identifier: 'RPTimerStepID',
+  timeout: Duration(seconds: 5),
+  title:
+      "Please think for a moment about how your day was and note it down in the next step",
+  playSound: true,
+  autoSkip: true,
+);
+
+final timerStep2 = RPTimerStep(
   identifier: 'RPTimerStepID',
   timeout: Duration(seconds: 5),
   title:
@@ -234,8 +244,9 @@ final linearSurveyTask = RPOrderedTask(
   identifier: "surveyTaskID",
   steps: [
     instructionStep,
-    timerStep,
+    timerStep1,
     formStep,
+    timerStep2,
     // smokingQuestionStep,
     insulinStep,
     // wakeUpStep,
