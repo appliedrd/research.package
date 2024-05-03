@@ -149,6 +149,12 @@ class RPUITaskState extends State<RPUITask> with CanSaveResult {
     });
   }
 
+  void skipQuestion() {
+    FocusManager.instance.primaryFocus?.unfocus();
+    blocTask.sendStatus(RPStepStatus.Finished);
+    //currentQuestionBodyResult = null;
+  }
+
   @override
   createAndSendResult() {
     // Populate the result object with value and end the time tracker (set endDate)
@@ -221,17 +227,21 @@ class RPUITaskState extends State<RPUITask> with CanSaveResult {
             flex: 1,
             child: Container(),
           ),
-          // Carousel indicator
           Expanded(
             flex: 2,
-            child: (!navigableTask)
-                ? Text(
-                    '${_currentStepIndex + 1} ${locale?.translate('of') ?? 'of'} ${widget.task.steps.length}',
-                    style: Theme.of(context).appBarTheme.titleTextStyle,
-                    textAlign: TextAlign.center,
-                  )
-                : Container(),
+            child: Container(),
           ),
+          // Carousel indicator
+          // Expanded(
+          //   flex: 2,
+          //   child: (!navigableTask)
+          //       ? Text(
+          //           '${_currentStepIndex + 1} ${locale?.translate('of') ?? 'of'} ${widget.task.steps.length}',
+          //           style: Theme.of(context).appBarTheme.titleTextStyle,
+          //           textAlign: TextAlign.center,
+          //         )
+          //       : Container(),
+          // ),
           // Close button
           Expanded(
             flex: 1,
@@ -312,7 +322,7 @@ class RPUITaskState extends State<RPUITask> with CanSaveResult {
                                       blocTask
                                           .sendStatus(RPStepStatus.Finished);
                                     }
-                                  : null,
+                                  : () {skipQuestion(); },
                               child: Text(
                                 RPLocalizations.of(context)
                                         ?.translate('NEXT') ??
