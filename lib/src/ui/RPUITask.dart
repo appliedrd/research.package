@@ -216,6 +216,50 @@ class RPUITaskState extends State<RPUITask> with CanSaveResult {
     );
   }
 
+
+void skipConfirmationDialog() {
+    showDialog<dynamic>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Please answer the question'),
+          actions: <Widget>[
+            ButtonTheme(
+              minWidth: 70,
+              child: TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Theme.of(context).primaryColor),
+                ),
+                child: Text(
+                  RPLocalizations.of(context)?.translate('NO') ?? "NO",
+                  style: const TextStyle(color: Colors.white),
+                ),
+                onPressed: () => {
+                    Navigator.of(context).pop(),
+                    skipQuestion() 
+                    }// Dismissing the pop-up
+              ),
+            ),
+            OutlinedButton(
+              child: Text(
+                RPLocalizations.of(context)?.translate('YES') ?? "YES",
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
+              onPressed: () {
+                // Calling the onCancel method with which the developer can for e.g. save the result on the device.
+                // Only call it if it's not null
+                Navigator.of(context).pop(); // Dismissing the pop-up
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+
   Widget _carouselBar(RPLocalizations? locale) {
     return SizedBox(
       height: AppBar().preferredSize.height,
@@ -322,7 +366,8 @@ class RPUITaskState extends State<RPUITask> with CanSaveResult {
                                       blocTask
                                           .sendStatus(RPStepStatus.Finished);
                                     }
-                                  : () {skipQuestion(); },
+                                    //todo alert question - are you sure?
+                                  : () { skipConfirmationDialog(); }, // skipQuestion(); },
                               child: Text(
                                 RPLocalizations.of(context)
                                         ?.translate('NEXT') ??
