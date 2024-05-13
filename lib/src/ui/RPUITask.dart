@@ -50,6 +50,7 @@ class RPUITaskState extends State<RPUITask> with CanSaveResult {
       PageController(keepPage: false);
 
   bool navigableTask = false;
+  bool hasPoppedSkipConfirmation = false;
 
   @override
   void initState() {
@@ -152,6 +153,7 @@ class RPUITaskState extends State<RPUITask> with CanSaveResult {
   void skipQuestion() {
     FocusManager.instance.primaryFocus?.unfocus();
     blocTask.sendStatus(RPStepStatus.Finished);
+    hasPoppedSkipConfirmation = false;
     //currentQuestionBodyResult = null;
   }
 
@@ -232,27 +234,29 @@ void skipConfirmationDialog() {
                   backgroundColor:
                       MaterialStateProperty.all(Theme.of(context).primaryColor),
                 ),
-                child: Text(
-                  RPLocalizations.of(context)?.translate('NO') ?? "NO",
+                child: Text("X",
+                  
                   style: const TextStyle(color: Colors.white),
                 ),
-                onPressed: () => {
-                    Navigator.of(context).pop(),
-                    skipQuestion() 
-                    }// Dismissing the pop-up
-              ),
-            ),
-            OutlinedButton(
-              child: Text(
-                RPLocalizations.of(context)?.translate('YES') ?? "YES",
-                style: TextStyle(color: Theme.of(context).primaryColor),
-              ),
-              onPressed: () {
+                onPressed: () {
                 // Calling the onCancel method with which the developer can for e.g. save the result on the device.
                 // Only call it if it's not null
-                Navigator.of(context).pop(); // Dismissing the pop-up
+                hasPoppedSkipConfirmation = true;
+                Navigator.of(context).pop();
+                 // Dismissing the pop-up
               },
-            )
+              ),
+            ),
+            // OutlinedButton(
+            //   child: Text(
+            //     RPLocalizations.of(context)?.translate('NO') ?? "NO",
+            //     style: TextStyle(color: Theme.of(context).primaryColor),
+            //   ),
+            //   onPressed: () => {
+            //         Navigator.of(context).pop(),
+            //         skipQuestion() 
+            //         }// Dismissing the pop-up
+            // )
           ],
         );
       },
@@ -367,7 +371,13 @@ void skipConfirmationDialog() {
                                           .sendStatus(RPStepStatus.Finished);
                                     }
                                     //todo alert question - are you sure?
-                                  : () { skipConfirmationDialog(); }, // skipQuestion(); },
+                                  : () { 
+                                        if (hasPoppedSkipConfirmation) {
+                                          skipQuestion();
+                                        } else {
+                                          skipConfirmationDialog(); 
+                                        }
+                                    }, // skipQuestion(); },
                               child: Text(
                                 RPLocalizations.of(context)
                                         ?.translate('NEXT') ??
