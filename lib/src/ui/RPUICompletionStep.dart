@@ -58,24 +58,24 @@ class RPUICompletionStepState extends State<RPUICompletionStep>
                 ),
               ],
             ),
-            ScaleTransition(
-              scale: _scale,
-              child: Image.asset(
-                'assets/icons/checkmark.png',
-                package: 'research_package',
-                height: 120,
-                width: 120,
-              ),
-            ),
+            // ScaleTransition(
+            //   scale: _scale,
+            //   child: Image.asset(
+            //     'assets/icons/checkmark.png',
+            //     package: 'research_package',
+            //     height: 120,
+            //     width: 120,
+            //   ),
+            // ),
             ButtonTheme(
               minWidth: 150,
-              child: OutlinedButton(
+              child: ElevatedButton(
                 onPressed: () {
                   blocTask.sendStatus(RPStepStatus.Finished);
                 },
-                child: Text(
-                    RPLocalizations.of(context)?.translate('DONE') ?? "DONE",
-                    style: TextStyle(color: Theme.of(context).primaryColor)),
+                child: const Text(
+                    "SUBMIT" /*locale?.translate("submit") ?? "Submit"*/,
+                    style: TextStyle(fontSize: 40)),
               ),
             )
           ],
