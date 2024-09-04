@@ -62,6 +62,7 @@ class RPUITaskState extends State<RPUITask> with CanSaveResult {
       PageController(keepPage: false);
 
   bool navigableTask = false;
+  bool hasPoppedSkipConfirmation = false;
 
   @override
   void initState() {
@@ -169,6 +170,13 @@ class RPUITaskState extends State<RPUITask> with CanSaveResult {
     });
   }
 
+  void skipQuestion() {
+    FocusManager.instance.primaryFocus?.unfocus();
+    blocTask.sendStatus(RPStepStatus.Finished);
+    hasPoppedSkipConfirmation = false;
+    //currentQuestionBodyResult = null;
+  }
+
   @override
   createAndSendResult() {
     // Populate the result object with value and end the time tracker (set endDate)
@@ -238,6 +246,52 @@ class RPUITaskState extends State<RPUITask> with CanSaveResult {
     );
   }
 
+
+void skipConfirmationDialog() {
+    showDialog<dynamic>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Please answer the question'),
+          actions: <Widget>[
+            ButtonTheme(
+              minWidth: 70,
+              child: TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Theme.of(context).primaryColor),
+                ),
+                child: Text("X",
+                  
+                  style: const TextStyle(color: Colors.white),
+                ),
+                onPressed: () {
+                // Calling the onCancel method with which the developer can for e.g. save the result on the device.
+                // Only call it if it's not null
+                hasPoppedSkipConfirmation = true;
+                Navigator.of(context).pop();
+                 // Dismissing the pop-up
+              },
+              ),
+            ),
+            // OutlinedButton(
+            //   child: Text(
+            //     RPLocalizations.of(context)?.translate('NO') ?? "NO",
+            //     style: TextStyle(color: Theme.of(context).primaryColor),
+            //   ),
+            //   onPressed: () => {
+            //         Navigator.of(context).pop(),
+            //         skipQuestion() 
+            //         }// Dismissing the pop-up
+            // )
+          ],
+        );
+      },
+    );
+  }
+
+
   Widget _carouselBar(RPLocalizations? locale) {
     return SizedBox(
       height: AppBar().preferredSize.height,
@@ -283,8 +337,12 @@ class RPUITaskState extends State<RPUITask> with CanSaveResult {
   Widget build(BuildContext context) {
     RPLocalizations? locale = RPLocalizations.of(context);
 
-    return PopScope(
-      canPop: true,
+    return WillPopScope(
+      onWillPop: () async {
+        // allow the user to cancel and pop the widget
+        blocTask.sendStatus(RPStepStatus.Canceled);
+        return true;
+      },
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         resizeToAvoidBottomInset: true,
@@ -345,7 +403,14 @@ class RPUITaskState extends State<RPUITask> with CanSaveResult {
                                       blocTask
                                           .sendStatus(RPStepStatus.Finished);
                                     }
-                                  : null,
+                                    //todo alert question - are you sure?
+                                  : () { 
+                                        if (hasPoppedSkipConfirmation) {
+                                          skipQuestion();
+                                        } else {
+                                          skipConfirmationDialog(); 
+                                        }
+                                    }, // skipQuestion(); },
                               child: Text(
                                 style: const TextStyle(color: Colors.white),
                                 RPLocalizations.of(context)

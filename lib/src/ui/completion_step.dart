@@ -74,8 +74,8 @@ class RPUICompletionStepState extends State<RPUICompletionStep>
                   blocTask.sendStatus(RPStepStatus.Finished);
                 },
                 child: Text(
-                  RPLocalizations.of(context)?.translate('DONE') ?? "DONE",
-                  style: TextStyle(
+                  RPLocalizations.of(context)?.translate('submit') ?? "submit",
+                  style: TextStyle(fontSize: 40,
                     color: (CupertinoTheme.of(context).primaryColor ==
                             CupertinoColors.activeBlue)
                         ? Theme.of(context).primaryColor
