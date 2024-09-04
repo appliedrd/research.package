@@ -353,7 +353,7 @@ void skipConfirmationDialog() {
                                   blocTask.sendStatus(RPStepStatus.Back),
                               child: Text(
                                 locale?.translate('BACK') ?? 'BACK',
-                                style: Theme.of(context).textTheme.button,
+                                style: Theme.of(context).textTheme.labelLarge,
                               ),
                             ),
                       StreamBuilder<bool>(

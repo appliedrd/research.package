@@ -61,7 +61,7 @@ class RPUITimerStepState extends State<RPUITimerStep> {
             child: Text(
               locale?.translate(widget.step.title) ?? widget.step.title,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
 

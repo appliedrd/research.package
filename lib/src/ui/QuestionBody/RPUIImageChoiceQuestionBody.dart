@@ -41,7 +41,7 @@ class RPUIImageChoiceQuestionBodyState
             _buildList(context, widget.answerFormat.choices),
             Text(
               text,
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.headlineSmall,
             )
           ],
         ));
