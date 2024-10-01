@@ -16,18 +16,18 @@ class RPUITimerStepState extends State<RPUITimerStep> {
   // Dynamic because we don't know what value the RPChoice will have
   Timer? timer;
   late int timeInSeconds;
-  Audio? audio;
+  // Audio? audio;
   bool _mPlayerIsInited = false;
   ByteData? data;
 
   @override
   void initState() {
     super.initState();
-    if (widget.step.playSound) {
-      audio = Audio.load(
-          'packages/research_package/assets/audio/RPTimerStepSound.mp3');
-      _mPlayerIsInited = true;
-    }
+    // if (widget.step.playSound) {
+    //   audio = Audio.load(
+    //       'packages/research_package/assets/audio/RPTimerStepSound.mp3');
+    //   _mPlayerIsInited = true;
+    // }
     timeInSeconds = widget.step.timeout.inSeconds;
     const oneSec = Duration(seconds: 1);
     timer = Timer.periodic(oneSec, (t) {
@@ -38,9 +38,9 @@ class RPUITimerStepState extends State<RPUITimerStep> {
       }
       if (timeInSeconds <= 0) {
         blocQuestion.sendReadyToProceed(true);
-        if (_mPlayerIsInited) {
-          audio?.play();
-        }
+        // if (_mPlayerIsInited) {
+        //   audio?.play();
+        // }
         t.cancel();
       }
     });
@@ -86,12 +86,12 @@ class RPUITimerStepState extends State<RPUITimerStep> {
   @override
   void dispose() async {
     super.dispose();
-    if (audio != null) {
-      await audio?.pause();
-      await audio?.dispose();
-      _mPlayerIsInited = false;
-      audio = null;
-    }
+    // if (audio != null) {
+    //   await audio?.pause();
+    //   await audio?.dispose();
+    //   _mPlayerIsInited = false;
+    //   audio = null;
+    // }
     timer?.cancel();
   }
 }
